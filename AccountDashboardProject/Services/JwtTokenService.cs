@@ -5,7 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace AccountDashboardProject
+namespace AccountDashboardProject.Services
 {
     public class JwtTokenService : IJwtTokenService
     {

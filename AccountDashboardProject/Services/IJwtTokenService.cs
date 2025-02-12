@@ -1,4 +1,4 @@
-﻿namespace AccountDashboardProject
+﻿namespace AccountDashboardProject.Services
 {
     public interface IJwtTokenService
     {
