@@ -3,7 +3,8 @@ using AccountDashboardProject;
 using AccountDashboardProject.Data;
 using Microsoft.EntityFrameworkCore;
 using AccountDashboardProject.Models;
-using Microsoft.AspNetCore.Identity; // Ensure this namespace contains AddJwtAuthentication method
+using Microsoft.AspNetCore.Identity;
+using AccountDashboardProject.SeedDataAndRoles; // Ensure this namespace contains AddJwtAuthentication method
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -58,6 +59,10 @@ using (var scope = app.Services.CreateScope())
     {
         var context = service.GetRequiredService<ApplicationDbContext>();
         context.Database.Migrate(); // Applies any pending migrations automatically
+        var userManager = service.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = service.GetRequiredService<RoleManager<IdentityRole>>();
+
+        await SeedData.SeedUsersAndRoles(userManager, roleManager);
     }
     catch (Exception ex)
     {
