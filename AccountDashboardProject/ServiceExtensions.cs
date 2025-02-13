@@ -1,6 +1,8 @@
-﻿using AccountDashboardProject.Models;
+﻿using AccountDashboardProject.Data;
+using AccountDashboardProject.Models;
 using AccountDashboardProject.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 

@@ -1,9 +1,18 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
-using AccountDashboardProject; // Ensure this namespace contains AddJwtAuthentication method
+using AccountDashboardProject;
+using AccountDashboardProject.Data;
+using Microsoft.EntityFrameworkCore;
+using AccountDashboardProject.Models;
+using Microsoft.AspNetCore.Identity; // Ensure this namespace contains AddJwtAuthentication method
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
 // Add services to the container.
 builder.Services.AddControllers();
 
@@ -42,8 +51,21 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
+{
+    var service = scope.ServiceProvider;
+    try
+    {
+        var context = service.GetRequiredService<ApplicationDbContext>();
+        context.Database.Migrate(); // Applies any pending migrations automatically
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error applying migrations: {ex.Message}");
+    }
+}
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
